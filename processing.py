@@ -45,7 +45,7 @@ class Processing():
         self.reader = csv.reader(ofile)
         self.name = []
         self.id = []
-        self.pclass = []        # dont forget to make survival for age > 50 as 0 in male
+        self.pclass = []  
         self.sex = []
         self.name = []
         self.embark = []
@@ -59,7 +59,7 @@ class Processing():
         self.parameters = []
 
 
-        self.survival = []  # main head of all variables
+        self.survival = []  
         self.cal_sur = [] # calculating survival
         ''' use only this while checking the probability with the output and getting correct percent of probability
         self.survived = []

@@ -1,6 +1,7 @@
-import csv
+import csv 
 import random
 from openpyxl import Workbook 
+
 '''csv_file = open('./datasets/train.csv', 'r')
 reader = csv.reader(csv_file)
 for row in reader:
@@ -8,29 +9,31 @@ for row in reader:
 
 class train:
     def __init__(self):
-        self.wb = Workbook()  
+        self.wb = Workbook() 
         self.ws = self.wb.active 
         self.ws.title = "Record_of_training" 
 
 
 
         self.survival_final = 0 
-        self.id = []  
+
+        self.id = []
         
         
-        self.survived = []
-        self.pclass = []
+
+        self.survived = [] 
+        self.pclass = [] 
         self.name = [] 
-        self.sex = []
-        self.age = []
+        self.sex = [] 
+        self.age = [] 
         self.sibsp = [] 
-        self.parch = [] 
+        self.parch = []
         self.ticket = [] 
-        self.fare = []
+        self.fare = [] 
         self.cabin = [] 
         self.embarked = [] 
 
-        self.male_class = [0] 
+        self.male_class = [0] * 3 
         self.male_class_influence = [0,0,0] 
         self.male_class_count = [0] * 3 
         self.female_class = [0] * 3  
@@ -39,18 +42,18 @@ class train:
         self.female_class = [0,0,0] 
         self.male_class = [0,0,0] 
         self.male_class_count = [0,0,0] 
-        self.female_class_count = [0, 0, 0]
+        self.female_class_count = [0, 0, 0] 
 
 
-        
+        # independent of gender
         self.cabin_count = 0 
-        self.cabin_count_alpha = [6] 
+        self.cabin_count_alpha = [6]  # A, B, C, D ,E ,F
         self.cabin_alpha_influence = [6]
         self.cabin_count_alpha_survived = [6]
 
-        
-        self.embarked_place_count = [0] * 3 
-        self.embarked_place_count_survived = [0] * 3 
+        # variable for embarked place
+        self.embarked_place_count = [0] * 3 # S , C , Q
+        self.embarked_place_count_survived = [0] * 3 # 
         self.embarked_influence = [3]
 
     def asking_values(self):
@@ -74,20 +77,21 @@ class train:
         self.cabin = []
         self.embarked = []
 
-       
+        # independent of gender
         self.cabin_count = 0
-        self.cabin_count_alpha = [6]  
+        self.cabin_count_alpha = [6]  # A, B, C, D ,E ,F
         self.cabin_alpha_influence = [6]
         self.cabin_count_alpha_survived = [6]
 
-       
-        self.embarked_place_count = [3]  
+        # variable for embarked place
+        self.embarked_place_count = [3]  # S , C , Q
         self.embarked_place_count_survived = [3]
         self.embarked_influence = [3]
 
         self.fname = input('Enter .csv filename to train the machine : ')
         ifile = open('./datasets/'+self.fname+'.csv', 'r')
         self.reader = csv.reader(ifile) 
+
         '''self.csv_file = open('./datasets/train.csv', 'r')
         self.reader = csv.reader(self.csv_file)'''
 
@@ -116,7 +120,7 @@ class train:
 
     def calculating_influence(self):
 
-       
+        # initialisation for various parameters
 
         self.embarked_influence = [0,0,0]
         self.embarked_place_count = [0,0,0]
@@ -124,14 +128,13 @@ class train:
         self.cabin_alpha_influence = [0,0,0,0,0,0]
         self.cabin_count_alpha = [0,0,0,0,0,0]
         self.cabin_count_alpha_survived = [0,0,0,0,0,0]
-        self.cabin_used = [False, False, False, False, False, False] 
+        self.cabin_used = [False, False, False, False, False, False] # type of cabin used- A, B, C, D, E, F
 
 
 
         for i in range(1, self.count):
             if self.sex[i]=='male' :
 
-                
 
                 if self.pclass[i] == '1':
                      if self.survived[i] == '1' :
@@ -148,7 +151,7 @@ class train:
                         self.male_class[2] = self.male_class[2] + 1
                      self.male_class_count[2] = self.male_class_count[2] + 1
 
-                
+
                 ''' write this code after the loop of i ends
                 self.male_class_influence[0] = self.male_class[0] / self.male_class_count[0] # class 1
                 self.male_class_influence[1] = self.male_class[1] / self.male_class_count[1] # class 2
@@ -157,7 +160,9 @@ class train:
 
             if self.sex[i]=='female' :
 
-                
+                # female code below
+
+                # below is ML of class vs survivial
 
                 if self.pclass[i] == '1':
                      if self.survived[i] == '1' :
@@ -174,17 +179,15 @@ class train:
                         self.female_class[2] = self.female_class[2] + 1
                      self.female_class_count[2] = self.female_class_count[2] + 1
 
-               
                 '''
                 self.female_class_influence[0] = self.female_class[0] / self.female_class_count[0] # class 1
                 self.female_class_influence[1] = self.female_class[1] / self.female_class_count[1] # class 2
                 self.female_class_influence[2] = self.female_class[2] / self.female_class_count[2] # class 3
                 '''
-                
 
-            
+            # cabin probability
             if self.cabin == '':
-                a = 0 
+                a = 0 # just as a null statement, ignore it
             else:
                 self.cabin_count = self.cabin_count + 1
 
@@ -234,7 +237,7 @@ class train:
                 self.cabin_alpha_influence[5] = self.cabin_count_alpha_survived[5] / self.cabin_count_alpha[5]
                 '''
 
-           
+            # influence of place embarked below
 
             if self.embarked[i] == 'S' :
                 if self.survived[i] == '1' :
@@ -256,14 +259,18 @@ class train:
             '''
 
 
-        
-        self.male_class_influence[0] = self.male_class[0] / self.male_class_count[0]  
-        self.male_class_influence[1] = self.male_class[1] / self.male_class_count[1] 
-        self.male_class_influence[2] = self.male_class[2] / self.male_class_count[2]  
+        # i loop ends here
 
-        self.female_class_influence[0] = self.female_class[0] / self.female_class_count[0]  
-        self.female_class_influence[1] = self.female_class[1] / self.female_class_count[1]  
-        self.female_class_influence[2] = self.female_class[2] / self.female_class_count[2]
+        # calculating ratios
+
+        self.male_class_influence[0] = self.male_class[0] / self.male_class_count[0]  # class 1
+        self.male_class_influence[1] = self.male_class[1] / self.male_class_count[1]  # class 2
+        self.male_class_influence[2] = self.male_class[2] / self.male_class_count[2]  # class 3
+
+        self.female_class_influence[0] = self.female_class[0] / self.female_class_count[0]  # class 1
+        self.female_class_influence[1] = self.female_class[1] / self.female_class_count[1]  # class 2
+        self.female_class_influence[2] = self.female_class[2] / self.female_class_count[2]  # class 3
+
 
         self.cabin_alpha_influence[0] = self.cabin_count_alpha_survived[0] / self.cabin_count_alpha[0]
         self.cabin_alpha_influence[1] = self.cabin_count_alpha_survived[1] / self.cabin_count_alpha[1]
@@ -272,13 +279,13 @@ class train:
         self.cabin_alpha_influence[4] = self.cabin_count_alpha_survived[4] / self.cabin_count_alpha[4]
         self.cabin_alpha_influence[5] = self.cabin_count_alpha_survived[5] / self.cabin_count_alpha[5]
 
-        self.embarked_influence[0] = self.embarked_place_count_survived[0] / self.embarked_place_count[0]  
-        self.embarked_influence[1] = self.embarked_place_count_survived[1] / self.embarked_place_count[1]  
-        self.embarked_influence[2] = self.embarked_place_count_survived[2] / self.embarked_place_count[2]  
+        self.embarked_influence[0] = self.embarked_place_count_survived[0] / self.embarked_place_count[0]  # S
+        self.embarked_influence[1] = self.embarked_place_count_survived[1] / self.embarked_place_count[1]  # C
+        self.embarked_influence[2] = self.embarked_place_count_survived[2] / self.embarked_place_count[2]  # Q
         self.saving_data_to_excel()
 
     def saving_data_to_excel(self):
-       
+        # naming headings
         self.ws.cell(row=1, column=1, value='male_class_influence')
         self.ws.cell(row=1, column=2, value='female_class_influence')
         self.ws.cell(row=1, column=3, value='cabin_alpha_influence')
@@ -293,11 +300,12 @@ class train:
         for i in range(2,8):
             self.ws.cell(row=i, column=3, value=self.cabin_alpha_influence[i-2])
 
-        self.wb.save('./datasets/savedProcessed/' + self.fname+'Processed.xlsm') 
+        self.wb.save('./datasets/savedProcessed/' + self.fname+'Processed.xlsm') # saving in the respective directory
         self.file_close()
 
     def file_close(self):
         self.wb.close()
-        print("Record Analysised..!\nOutput saved at " + "./datasets/savedProcessed/"+self.fname+'.xlsm')
-        
+        print("Record Analysed..!\nOutput saved at " + "./datasets/savedProcessed/"+self.fname+'.xlsm')
+        # ifile has already been closed in the assigning function just after it was used
+
 
